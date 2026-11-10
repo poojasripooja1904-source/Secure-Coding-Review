@@ -1,0 +1,43 @@
+
+import re
+
+print("==============================")
+print("     SECURE CODING REVIEW")
+print("==============================")
+
+filename = input("Enter Python file name: ")
+
+try:
+    with open(filename, "r") as file:
+        code = file.read()
+
+    checks = {
+        "Use of eval()": r"\beval\s*\(",
+        "Use of exec()": r"\bexec\s*\(",
+        "Hardcoded password": r"password\s*=\s*['\"]",
+        "Unsafe shell command": r"shell\s*=\s*True",
+        "Unsafe pickle loading": r"pickle\.loads\s*\("
+    }
+
+    issues = 0
+
+    for issue, pattern in checks.items():
+        if re.search(pattern, code):
+            print("[WARNING]", issue)
+            issues += 1
+        else:
+            print("[SAFE CHECK]", issue, "not found")
+
+    print("\n==============================")
+    print("SECURITY REVIEW RESULT")
+    print("==============================")
+    print("Issues Found:", issues)
+
+    if issues == 0:
+        print("No checked insecure patterns found.")
+    else:
+        print("Review the warnings and improve your code.")
+
+except FileNotFoundError:
+    print("File not found!")
+
